@@ -40,5 +40,7 @@ decision #2 in [`../AGENTS.md`](../AGENTS.md).
 
 ## Related
 
-Nothing outside `projects/agora/` shares these conventions. `PROJECT-STANDARD.md`
-at the repo root defines the document set every project carries.
+This repository is self-contained. `README.md` describes the product and how to run it,
+`AGENTS.md` holds the conventions and the locked decisions, `PLAN.md` is the approved
+contract, `STATE.md` records the last verified status, and `CHANGELOG.md` records what
+changed and when.

@@ -1,25 +1,22 @@
 # Agora — STATE
 
 **Derived file.** Regenerate by verifying, not by trusting commit messages or this file.
-**Verified:** 2026-10-17 · `HEAD 5df8f0b` · Flutter 3.47.0 / Dart 3.13.0 ·
+**Verified:** 2026-10-17 · Flutter 3.47.0 / Dart 3.13.0 ·
 `flutter test` 296 passed / 1 skipped; `dart analyze` and `flutter analyze` both
 **`No issues found!` — 0 errors, 0 warnings, 0 info, exit 0.** Before this sweep a bare
 `dart analyze` on the package reported **20 errors + 197 info**; every error, and all 22
 of the tool/ infos, were in the ignored probe scratch. `tool/cpp_lint.sh` **PASS**
 (5 files, 0 errors, 0 warnings) and `flutter build linux --release` **PASS** →
 `build/agora-0.1.0-x86_64.AppImage`, 12 MB, plus a portable
-`build/agora-0.1.0-x86_64.tar.gz` for FUSE-less hosts. `make docs-check` exit 0.
+`build/agora-0.1.0-x86_64.tar.gz` for FUSE-less hosts.
 
-**Git hygiene (2026-10-17).** The working tree is clean. Everything formerly untracked
-and load-bearing is now committed: `tool/cpp_lint.sh`, `PLAN-GROUPCHAT.md`,
-`scripts/devsup.py`, `scripts/verify_docs.py`, the monorepo `AGENTS.md`, and the R1
-sources + tests. `VISION.md` was deleted after `ce31de1` and **restored** byte-for-byte —
-it holds the user's verbatim vision and the standing rule is add-only-never-delete. The
-remaining `tool/` scratch (`run_*.dart`, `check_load*.dart`, `debug*.dart`, `dbg2.dart`,
-`probe_fix.dart`) is **ignored, not deleted**, so a plain `git clean -fd` can no longer
-destroy it. This STATE.md edit is deliberately **left uncommitted**: `verify_docs.py`
-compares the working-tree pin against HEAD, so committing the pin would immediately
-re-stale it. Do not "fix" that by committing this file.
+**Git hygiene (2026-10-17).** The working tree is clean. Everything load-bearing is
+tracked: `tool/cpp_lint.sh` and the other tooling it needs, `PLAN-GROUPCHAT.md`, and the
+R1 sources + tests. `VISION.md` holds the user's verbatim vision under a standing
+add-only-never-delete rule — it was once deleted and has been **restored byte-for-byte**.
+The remaining `tool/` scratch (`run_*.dart`, `check_load*.dart`, `debug*.dart`,
+`dbg2.dart`, `probe_fix.dart`) is **ignored, not deleted**, so a plain `git clean -fd`
+can no longer destroy it; `analysis_options.yaml` scopes the analyzer away from it.
 
 **Analyzer scope (2026-10-17).** `analysis_options.yaml` now excludes those same five
 scratch globs under `analyzer.exclude`. That is a *scope* fix, not a suppression: the
@@ -47,7 +44,6 @@ warning. `flutter test` is now **296 passed / 1 skipped** (the new test file add
 ## How to verify this file
 
 ```bash
-cd projects/agora
 flutter test          # 296 passed, 1 skipped, 0 failed
 dart analyze          # No issues found! — 0 errors, 0 warnings, 0 info
 tool/cpp_lint.sh      # 5 tracked C++ files, 0 errors, 0 warnings (GTK 3.24.52)
@@ -127,7 +123,7 @@ The wiring gap that used to define this project is closed:
 | Calibration Studio live probing | **CLOSED** | `lib/core/adapters/selector_prober.dart` + `test/selector_prober_test.dart`; `SelectorProber` reports which selector tier actually resolved on a live page |
 | Journal replay (Time Machine) | **CLOSED** | `lib/core/council/journal_replay.dart` + `test/journal_replay_test.dart`; replays captured turns into the Sandbox Lab, with FIFO pairing, drift detection, and skip-vs-fail |
 | ~~`linux/**` excluded from analysis~~ | **RESOLVED — the exclusion was a no-op, and the real gap is now closed.** `dart analyze` reads only `.dart` files and `linux/` has zero, so removing the exclusion changed the result by nothing (74 issues either way). The C++ runner was checked by no tool. Added `tool/cpp_lint.sh`: `clang++ -fsyntax-only -Wall -Wextra` over git-tracked `linux/` C++ only, with every flag (`APPLICATION_ID`, `BINARY_NAME`, GTK via `pkg-config`, plugin includes) derived from the files CMake actually reads. It found 2 real `-Wunused-parameter` warnings in `my_application.cc`, now fixed. **5 files, 0 errors, 0 warnings.** |
-| `tool/dbg2.dart` | Untracked scratch, **now fully clean** — both warnings removed 2026-10-06: the unused `council_protocol.dart` import, and `@override` on `AgentAdapter get adapter` (a getter `AgentAdapter` never declares, hence `override_on_non_overriding_member`; the getter itself is legal and kept). Not deleted: **another agent works in this monorepo concurrently** and has destroyed untracked work here before, so an untracked file may be theirs. |
+| `tool/dbg2.dart` | Untracked scratch, **now fully clean** — both warnings removed 2026-10-06: the unused `council_protocol.dart` import, and `@override` on `AgentAdapter get adapter` (a getter `AgentAdapter` never declares, hence `override_on_non_overriding_member`; the getter itself is legal and kept). Not deleted: **another agent works in this repository concurrently** and has destroyed untracked work here before, so an untracked file may be theirs. |
 | **Dispatch model** | **RESOLVED by Amendment R1 (§18, ratified 2026-10-06).** See below — this was the blocking contradiction. |
 
 ## Dispatch model — RESOLVED by Amendment R1

@@ -146,7 +146,7 @@ and `SpeakerSelector` (blocked on the dispatch contradiction below).
   `probe_fix.dart`) are **ignored scratch — kept on disk, never shipped.** They are dead
   helpers written against an older API and were the *entire* reason a bare `dart analyze`
   on the package reported 20 errors. They are `.gitignore`d rather than deleted because
-  **another agent commits in this monorepo concurrently and runs `git clean`/`git restore`;**
+  **another agent commits in this repository concurrently and runs `git clean`/`git restore`;**
   that has already destroyed untracked work here. Ignoring them additionally makes a plain
   `git clean -fd` skip them. Do not assume an untracked file is yours to delete. Commit
   after every edit and re-`grep` before trusting a result.
@@ -172,8 +172,7 @@ and `SpeakerSelector` (blocked on the dispatch contradiction below).
   `PATH`. Side effect: those 45 commands (`pip`, `pip3`, `black`, `pytest`, `uvicorn`,
   `tqdm`, …) are now absent rather than present-and-broken; none of them worked in the
   first place. `/usr/bin/python3 -m pip` is also gone ("No module named pip") — restore it
-  with `python3 -m ensurepip --upgrade`, or use a project venv
-  (`backend/.venv`, `projects/rgx/.venv`). `tool/build_appimage.sh` still detects a shim
+  with `python3 -m ensurepip --upgrade`. `tool/build_appimage.sh` still detects a shim
   that resolves but does not run and falls back to `/usr/bin`. Related: FUSE mounts are
   denied here (`fusermount: mount failed: Operation not permitted` — this session runs with
   `NoNewPrivs=1`, which nullifies fusermount's setuid bit; `libfuse.so.2` and `/dev/fuse`
