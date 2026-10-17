@@ -43,18 +43,19 @@ jobs:
           channel: stable
           cache: true
 
-      # `tool/cpp_lint.sh` derives every flag from the real CMake inputs,
-      # including `linux/flutter/ephemeral/generated_config.cmake`. That file is
-      # written by a Flutter *build* (its CMake integration) and is gitignored, so it
-      # is absent from a bare checkout. A `flutter pub get` is NOT enough — it does not
-      # write this file, which is exactly why the first run of this job failed.
-      - name: Generate the Flutter Linux config
-        run: flutter build linux --debug
-
-      # The C++ runner is checked by no Dart tool. `tool/cpp_lint.sh` needs GTK's
-      # headers present.
+      # GTK headers come first: `flutter build linux` runs CMake, which needs
+      # `pkg-config gtk+-3.0`. Without them the configure step aborts before it
+      # writes anything, and the lint would then fail for the wrong reason.
       - name: Install GTK headers
         run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev clang
+
+      # `tool/cpp_lint.sh` derives every flag from the real CMake inputs,
+      # including `linux/flutter/ephemeral/generated_config.cmake`. That file is
+      # written by a Flutter *build* and is gitignored, so it is absent from a bare
+      # checkout. A `flutter pub get` is NOT enough — it does not write this file,
+      # which is exactly why the first run of this job failed.
+      - name: Generate the Flutter Linux config
+        run: flutter build linux --debug
 
       - name: Lint the Linux runner
         run: ./tool/cpp_lint.sh
